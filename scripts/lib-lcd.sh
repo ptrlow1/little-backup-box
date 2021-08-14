@@ -38,16 +38,16 @@ function lcd_message () {
 
     #Wait for Lockfile
     if [ -f "${LockFile}" ]; then
-        LockFileTime=$(head -n 1 ${LockFile})
+        LockFileTime=$(sudo head -n 1 ${LockFile})
         ActualTime=$(date +%s )
-        while [ $(($ActualTime - $LockFileTime)) == 0 ]
+        while [ $(expr $ActualTime - $LockFileTime) -lt 1 ]
         do
             ActualTime=$(date +%s )
             sleep 0.5
         done
     fi
 
-    date +%s > "${LockFile}"
+    sudo date +%s > "${LockFile}"
 
     # clear screen
     if [ "${LineCount}" -eq 0 ];
@@ -74,14 +74,17 @@ function lcd_message () {
     done
 
     #save Lines to file
-    echo -en "${Lines[0]}\n${Lines[1]}\n${Lines[2]}\n${Lines[3]}" > "${FILE_OLED_OLD}"
+    sudo echo -en "${Lines[0]}\n${Lines[1]}\n${Lines[2]}\n${Lines[3]}" > "${FILE_OLED_OLD}"
 
     #display
 
     LogLines=""
     n=0
 
-    sudo oled r
+    if [ $DISP = true ]; then
+        sudo oled r
+    fi
+
     while [ "${n}" -le 3 ]
     do
 
@@ -104,12 +107,15 @@ function lcd_message () {
         then
             if [ "${FORCE_FORMAT}" != "pos" ];
             then
-                sudo oled +R $(expr $n + 1)
+                if [ $DISP = true ]; then
+                    sudo oled +R $(expr $n + 1)
+                fi
             fi
         fi
 
-        sudo oled +${DisplayLines[$n]} "${LINE}"
-
+        if [ $DISP = true ]; then
+            sudo oled +${DisplayLines[$n]} "${LINE}"
+        fi
 
         if [ ! -z "${LogLines}" ];
         then
@@ -119,7 +125,10 @@ function lcd_message () {
 
         n=$(expr $n + 1)
     done
-    sudo oled s
+
+    if [ $DISP = true ]; then
+        sudo oled s
+    fi
 
     # log
     if [ ! -z "${LogLines}" ];

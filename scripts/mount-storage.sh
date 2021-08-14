@@ -17,22 +17,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-# Don't start as root
-if [[ $EUID -eq 0 ]]; then
-    echo "Run the script as a regular user"
-    exit 1
-fi
-
 WORKING_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 CONFIG="${WORKING_DIR}/config.cfg"
 source "$CONFIG"
 
-# Choose display-setup, default backup mode, set crontab
-source "${WORKING_DIR}/sub-select-mode.sh"
+# Takes two arguments
+MODE=${1} # "mount", "umount" or "check"
+DEVICE=${2} # "usb_1" or "usb_2"
 
-# Finished
-clear
-echo "Alle done! Rebooting..."
-sleep 2
+# Load Log library
+. "${WORKING_DIR}/lib-log.sh"
 
-# #sudo "${WORKING_DIR}/poweroff.sh reboot force"
+# Load Device library
+. "${WORKING_DIR}/lib-devices.sh"
+
+if [ "${MODE}" = "mount" ]; then
+ echo "$(mount_device "${DEVICE}" false "$(device_mounted usb_1)" "$(device_mounted usb_2)")"
+elif [ "${MODE}" = "check" ]; then
+ echo "$(device_mounted ${DEVICE})"
+elif [ "${MODE}" = "umount" ]; then
+ echo "$(umount_device ${DEVICE})"
+fi
+
+exit 0

@@ -17,11 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-# Run the script as a regular user
+# Don't start as root
 if [[ $EUID -eq 0 ]]; then
    echo "Run the script as a regular user"
    exit 1
 fi
+
+WORKING_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts"
 
 # Update source and perform the full system upgrade
 sudo apt update
@@ -40,21 +42,25 @@ if [ -z "$USER" ]; then
     USER="pi"
 fi
 
-# Clone Mejiro repository
 cd
+
 git clone https://github.com/dmpop/mejiro.git
 
-# Create symlink to media
+sed -i 's/^$protect = .*/$protect = false; \/\/ Enable password protection/' "${WORKING_DIR}/../../mejiro/config.php"
+
+# Create Link to media
 cd
 sudo ln -s /media "mejiro/photos"
 
-# Add a cronjob
+# Crontab
 crontab -l | {
     cat
     echo "@reboot cd && cd mejiro && sudo php -S 0.0.0.0:8081"
 } | crontab
 
-# Finish
-echo "All done. Rebooting ..."
+#Finish
+echo "All done. Rebooting..."
+
 sleep 2
+
 sudo reboot

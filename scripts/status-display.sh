@@ -18,25 +18,16 @@
 #######################################################################
 
 
-# library expects from calling script:
+# sub expects from calling script:
 # - source config.cfg
 # - source lib-log.sh
 # - source lib-lcd.sh
 
-# Get arguments
-if [ -z $1 ];
-then
-    FILES_TO_SYNC=0
-else
-    FILES_TO_SYNC=$1
-fi
-
-if [ -z $2 ];
-then
-    BACKUP_PATH="$BAK_DIR"
-else
-    BACKUP_PATH=$2
-fi
+# Arguments:
+# Uses from main-script:
+# $FILES_TO_SYNC
+# $BACKUP_PATH
+# $DEST_MODE
 
 # Load LCD library
 . "${WORKING_DIR}/lib-lcd.sh"
@@ -44,13 +35,14 @@ fi
 # Count of files in storage before backup starts
 FILES_COUNT_STORAGE_START=$(find $BACKUP_PATH -type f | wc -l)
 
+
 while [ true ]; do
     # Count files in the backup destination
     # Calculate the number of files to be transferred
 
     FILES_COUNT_STORAGE=$(find $BACKUP_PATH -type f | wc -l)
-
     FILES_SYNCED=$(expr $FILES_COUNT_STORAGE - $FILES_COUNT_STORAGE_START)
+
     if [ "${FILES_TO_SYNC}" -gt "0" ];
     then
         FINISHED_PERCENT=$(expr 100 \* $FILES_SYNCED / $FILES_TO_SYNC)
@@ -59,10 +51,11 @@ while [ true ]; do
         PROGRESSBAR_16="                "
         PROGRESSBAR=${PROGRESSBAR_16:0:$PROGRESSBAR_LENGTH}
     else
-        FINISHED_PERCENT=""
+        FINISHED_PERCENT="?"
         PROGRESSBAR=""
     fi
 
     lcd_message "+Backup status:" "+${FILES_SYNCED} of ${FILES_TO_SYNC}" "+${FINISHED_PERCENT}%" "-${PROGRESSBAR}"
     sleep 2
+
 done

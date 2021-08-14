@@ -26,6 +26,7 @@ source "$CONFIG"
 FILE_OLED_OLD="${WORKING_DIR}/tmp/oled_old.txt"
 FILE_LOG="${WORKING_DIR}/tmp/little-backup-box.log"
 FSCK_LOG="${WORKING_DIR}/tmp/fsck.log"
+IP_MAIL_SENT_MARKERFILE="${WORKING_DIR}/tmp/ip-sent.txt"
 
 # Load Log library
 . "${WORKING_DIR}/lib-log.sh"
@@ -36,6 +37,7 @@ FSCK_LOG="${WORKING_DIR}/tmp/fsck.log"
 #Arguments
 ACTION="${1}"
 FORCE="${2}"
+MESSAGE="${3}"
 
 # Power off
 if [ "$POWER_OFF" = "true" ] || [ "${FORCE}" = "force" ]; then
@@ -43,23 +45,25 @@ if [ "$POWER_OFF" = "true" ] || [ "${FORCE}" = "force" ]; then
     sudo umount "${STORAGE_MOUNT_POINT}"
     sudo umount "${SOURCE_MOUNT_POINT}"
 
-    # If display support is enabled, notify that the backup is complete
-    if [ "$DISP" = "true" ]; then
-
-        if [ "${FORCE}" = "force" ]; then
-            if [ "${ACTION}" = "poweroff" ]; then
-                lcd_message "+Power off." "+Do not unplug" "+while the ACT" "+LED is on. Bye!"
-            elif [ "${ACTION}" = "reboot" ]; then
-                lcd_message "+Rebooting..." "+Do not unplug!" "" ""
-            fi
+    if [ "${ACTION}" = "poweroff" ]; then
+        if [ -z "${MESSAGE}" ]; then
+            lcd_message "+Power off." "+Do not unplug" "+while the ACT" "+LED is on. Bye!"
         else
-            lcd_message "+Backup complete." "+Do not unplug" "+while the ACT" "+LED is on. Bye!"
+            lcd_message "+${MESSAGE}" "+Do not unplug" "+while the ACT" "+LED is on. Bye!"
+        fi
+    elif [ "${ACTION}" = "reboot" ]; then
+        if [ -z "${MESSAGE}" ]; then
+            lcd_message "+Rebooting..." "+Do not unplug!" "" ""
+        else
+            lcd_message "+${MESSAGE}" "+Rebooting..." "+Do not unplug!" ""
         fi
     fi
 
-    echo "" >"${FILE_OLED_OLD}"
-    echo "" >"${FILE_LOG}"
-    echo "" >"${FSCK_LOG}"
+    # cleanup
+    sudo echo "" >"${FILE_OLED_OLD}"
+    sudo echo "" >"${FILE_LOG}"
+    sudo echo "" >"${FSCK_LOG}"
+    sudo rm "${IP_MAIL_SENT_MARKERFILE}"
 
     if [ "${ACTION}" = "poweroff" ]; then
         sudo poweroff
@@ -68,8 +72,10 @@ if [ "$POWER_OFF" = "true" ] || [ "${FORCE}" = "force" ]; then
     fi
 
 else
-    # If display support is enabled, notify that the backup is complete
-    if [ "$DISP" = "true" ]; then
-        lcd_message "+Backup complete." "-Do not unplug!" "+Power down via" "+web UI"
-    fi
+    # notify the backup status
+    if [ -z "${MESSAGE}" ]; then
+            lcd_message "+Backup complete." "+Do not unplug!" "+Power down via" "+web UI"
+        else
+            lcd_message "+${MESSAGE}" "+Do not unplug!" "+Power down via" "+web UI"
+        fi
 fi
