@@ -90,9 +90,9 @@ chmod +x ${WORKING_DIR}/*.sh
 source "${WORKING_DIR}/sub-select-mode.sh"
 
 # Change php.ini defaults
-sudo find /etc/php/ -name "php.ini" -exec sed -i "s/^\(max_file_uploads\s*=\s*\).*\$/\1100/" {} \;
-sudo find /etc/php/ -name "php.ini" -exec sed -i "s/^\(post_max_size\s*=\s*\).*\$/\10/" {} \;
-sudo find /etc/php/ -name "php.ini" -exec sed -i "s/^\(upload_max_filesize\s*=\s*\).*\$/\1256M/" {} \;
+sudo find /etc/php/ -name "php.ini" -exec sudo sed -i "s/^\(max_file_uploads\s*=\s*\).*\$/\1100/" {} \;
+sudo find /etc/php/ -name "php.ini" -exec sudo sed -i "s/^\(post_max_size\s*=\s*\).*\$/\10/" {} \;
+sudo find /etc/php/ -name "php.ini" -exec sudo sed -i "s/^\(upload_max_filesize\s*=\s*\).*\$/\1256M/" {} \;
 
 # Create web UI systemd unit
 PORTS=("80" "8000")
