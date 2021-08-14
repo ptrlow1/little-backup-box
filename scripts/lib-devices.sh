@@ -89,7 +89,7 @@ function mount_device() {
             if [ "${MOUNT_DEVICE}" = "usb_2" ] && [ -z "${DEVICE_IDENT_2}" ]; then
                 #get USB_1_LUM_ALPHA to prevent mounting another partition on the same drive
                 if [ ! -z "${DEVICE_IDENT_1}" ]; then
-                    USB_1_LUM="$(sudo blkid | grep "'${DEVICE_IDENT_1/--uuid/}'" | awk '{print $1}' | sed 's/[^0-9a-z\/]*//g'))"
+                    USB_1_LUM="$(sudo blkid | grep "${DEVICE_IDENT_1/--uuid\ }" | awk '{print $1}' | sed 's/[^0-9a-z\/]*//g')"
                     USB_1_LUM_ALPHA=${USB_1_LUM//[0-9]/}
                 fi
 
