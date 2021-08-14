@@ -133,3 +133,9 @@ crontab -l | {
     echo "*/1 * * * * sudo ${WORKING_DIR}/ip.sh"
 } | crontab
 
+if [ -f "${WORKING_DIR}/../../mejiro/index.php" ]; then
+    crontab -l | {
+        cat
+        echo "@reboot cd && cd mejiro && sudo php -S 0.0.0.0:8081"
+    } | crontab
+fi
