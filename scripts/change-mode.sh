@@ -35,4 +35,4 @@ clear
 echo "Alle done! Rebooting..."
 sleep 2
 
-# #sudo "${WORKING_DIR}/poweroff.sh reboot force"
+sudo "${WORKING_DIR}/poweroff.sh reboot force"

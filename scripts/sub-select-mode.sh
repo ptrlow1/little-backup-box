@@ -20,9 +20,6 @@
 # sub expects from calling script:
 # - $WORKING_DIR
 
-# remove all from crontab
-crontab -r
-
 # Definitions
 BACKTITLE="Little Backup Box"
 DISP=false
@@ -76,6 +73,10 @@ CHOICE=$(dialog --clear \
 
 clear
 
+# remove all from crontab
+crontab -r
+
+# write new crontab
 case $CHOICE in
 1)
     crontab -l | {
