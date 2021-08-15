@@ -38,19 +38,15 @@ done
 
 IP=$(hostname -I | cut -d' ' -f1)
 
-if [ $DISP = true ]; then
-    lcd_message "$IP"
-fi
-
 if [ ! -z $SMTP_SERVER ]; then
     TEXT_PLAIN="
 web UI: http://${IP}:8000
 Upload: http://${IP}:8000/upload.php
-Files: http://${IP}:8080
+Files: http://${IP}:8080"
     TEXT_HTML="
 web UI: <a href='http://${IP}:8000'>http://${IP}:8000</a><br>
 Upload: <a href='http://${IP}:8000/upload.php'>http://${IP}:8000/upload.php</a><br>
-Files: <a href='http://${IP}:8080'>http://${IP}:8080</a><br>
+Files: <a href='http://${IP}:8080'>http://${IP}:8080</a><br>"
 
     if [ -f "${WORKING_DIR}/../../mejiro/index.php" ]; then
         TEXT_PLAIN="${TEXT_PLAIN}
@@ -61,11 +57,11 @@ Mejiro: <a href='http://${IP}:8081'>http://${IP}:8081</a><br>"
 
     TEXT_PLAIN="${TEXT_PLAIN}
 
-Samba: open 'smb://${IP}' into a file manager"
+To access the SMB share, open 'smb://${IP}' into a file manager"
 
     TEXT_HTML="${TEXT_HTML}
 <br>
-Samba: open '<a href='smb://${IP}'>smb://${IP}</a>' into a file manager<br>"
+To access the SMB share, open '<a href='smb://${IP}'>smb://${IP}</a>' into a file manager<br>"
 
     send_email "Little Backup Box Info: ${IP}" "${TEXT_PLAIN}" "${TEXT_HTML}"
 fi
