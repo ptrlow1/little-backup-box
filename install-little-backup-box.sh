@@ -23,6 +23,15 @@ if [[ $EUID -eq 0 ]]; then
     exit 1
 fi
 
+# define WORKING_DIR
+WORKING_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts"
+if [[ ! "${WORKING_DIR}" =~ "little-backup-box" ]]; then
+    # in case it is called by regular install command (curl ...)
+    WORKING_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/little-backup-box/scripts"
+fi
+
+CONFIG="${WORKING_DIR}/config.cfg"
+
 # Update source and perform the full system upgrade
 sudo apt update
 sudo apt full-upgrade -y
@@ -81,9 +90,7 @@ cd
 git clone https://github.com/dmpop/little-backup-box.git
 cd little-backup-box
 
-WORKING_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts"
-CONFIG="${WORKING_DIR}/config.cfg"
-
+# make scripts executable
 chmod +x ${WORKING_DIR}/*.sh
 
 # Enable LCD, select default backup mode, add cron jobs
