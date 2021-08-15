@@ -131,7 +131,7 @@ crontab -l | {
 
 crontab -l | {
     cat
-    echo "*/1 * * * * sudo ${WORKING_DIR}/ip.sh"
+    echo "@reboot sudo ${WORKING_DIR}/ip.sh"
 } | crontab
 
 if [ -f "${WORKING_DIR}/../../mejiro/index.php" ]; then

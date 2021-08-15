@@ -21,10 +21,6 @@ WORKING_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 CONFIG="${WORKING_DIR}/config.cfg"
 source "$CONFIG"
 
-# Config
-IP_MAIL_SENT_MARKERFILE="${WORKING_DIR}/tmp/ip-sent.txt"
-FILE_OLED_OLD="${WORKING_DIR}/tmp/oled_old.txt"
-
 # Load Log library
 . "${WORKING_DIR}/lib-log.sh"
 
@@ -43,25 +39,15 @@ done
 IP=$(hostname -I | cut -d' ' -f1)
 
 if [ $DISP = true ]; then
-    if ! grep -q "${IP}" "${FILE_OLED_OLD}"; then
-        lcd_message "$IP"
-    fi
+    lcd_message "$IP"
 fi
 
-UPTIME=$(awk '{print int($1)}' /proc/uptime)
-
-if [ $UPTIME -lt "80" ] && [ -f "${IP_MAIL_SENT_MARKERFILE}" ]; then
-    sudo rm "${IP_MAIL_SENT_MARKERFILE}"
-fi
-
-if [ ! -z $SMTP_SERVER ] && [ ! -f "${IP_MAIL_SENT_MARKERFILE}" ]; then
-
+if [ ! -z $SMTP_SERVER ]; then
     TEXT_PLAIN="
 web UI: http://${IP}:8000
 Upload: http://${IP}:8000/upload.php
 Files: http://${IP}:8080
 miniDLNA: http://${IP}:8200"
-
     TEXT_HTML="
 web UI: <a href='http://${IP}:8000'>http://${IP}:8000</a><br>
 Upload: <a href='http://${IP}:8000/upload.php'>http://${IP}:8000/upload.php</a><br>
@@ -84,5 +70,4 @@ Samba: open 'smb://${IP}' into a file manager"
 Samba: open '<a href='smb://${IP}'>smb://${IP}</a>' into a file manager<br>"
 
     send_email "Little Backup Box Info: ${IP}" "${TEXT_PLAIN}" "${TEXT_HTML}"
-    touch "${IP_MAIL_SENT_MARKERFILE}"
 fi
