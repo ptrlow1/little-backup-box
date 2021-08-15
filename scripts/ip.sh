@@ -47,12 +47,10 @@ if [ ! -z $SMTP_SERVER ]; then
 web UI: http://${IP}:8000
 Upload: http://${IP}:8000/upload.php
 Files: http://${IP}:8080
-miniDLNA: http://${IP}:8200"
     TEXT_HTML="
 web UI: <a href='http://${IP}:8000'>http://${IP}:8000</a><br>
 Upload: <a href='http://${IP}:8000/upload.php'>http://${IP}:8000/upload.php</a><br>
 Files: <a href='http://${IP}:8080'>http://${IP}:8080</a><br>
-miniDLNA: <a href='http://${IP}:8200'>http://${IP}:8200</a><br>"
 
     if [ -f "${WORKING_DIR}/../../mejiro/index.php" ]; then
         TEXT_PLAIN="${TEXT_PLAIN}

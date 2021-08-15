@@ -12,7 +12,6 @@ sub expects from calling script:
     <li><a href="sysinfo.php"><?php echo L::sysinfo; ?></a></li>
     <li><a href="config.php"><?php echo L::config; ?></a></li>
     <li><a href="tools.php"><?php echo L::tools; ?></a></li>
-    <li><a href="<?php echo ("http://" . str_replace(":" . $_SERVER['SERVER_PORT'], ":8200", $HTTP_HOST)); ?>"><?php echo L::minidlna; ?></a></li>
     <li><a href="<?php echo ("http://" . str_replace(":" . $_SERVER['SERVER_PORT'], ":8080", $HTTP_HOST)); ?>"><?php echo L::filebrowser; ?></a></li>
     <?php
         if (file_exists("${WORKING_DIR}/../../mejiro/index.php")) {
