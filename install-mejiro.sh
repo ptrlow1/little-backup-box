@@ -43,10 +43,7 @@ if [ -z "$USER" ]; then
 fi
 
 cd
-
 git clone https://github.com/dmpop/mejiro.git
-
-sed -i 's/^$protect = .*/$protect = false; \/\/ Enable password protection/' "${WORKING_DIR}/../../mejiro/config.php"
 
 # Create Link to media
 cd
