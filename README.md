@@ -1,8 +1,9 @@
 <img src="https://raw.github.com/outdoorbits/little-backup-box/main/img/lbb_display.jpg" align="right" width="320" height="213">
 
 <h1>Little Backup Box</h1>
-Dmitri Popov has entrusted me with the further maintenance of Little Backup Box today. Thank you Dima for this great project. I very much hope you stay connected to the project!<br>
-26.12.2021<br>
+<img src="https://raw.github.com/ptrlow1/little-backup-box/main/img/exclamation_mark.gif" width="100px" align="left">
+This is the old main version. It is no longer maintained or supported.
+This 'legacy' branch was originally programmed (by dmpop) with bash scriping. It has been replaced by a python3 based codebase. The new code has been tested & is just as stable as its obsolete predecessor. Please start using the main branch.
 
 <h1>NEWS</h1>
 <ul>
